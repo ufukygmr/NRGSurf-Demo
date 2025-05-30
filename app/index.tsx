@@ -1,131 +1,191 @@
-// React
-import {
-  View,
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-} from 'react-native';
-
-// Components
-import ChargeChart from '@/components/Chart';
-import Timeline from '@/components/TimeLine';
-import ConsumptionCard from '@/components/ConsumptionCard';
-
-// Icons
-import ArrowLeftIcon from '@/assets/icons/ArrowLeft';
-import VectorIcon from '@/assets/icons/Vector';
-import SunIcon from '@/assets/icons/Sun';
-import CheckCircleIcon from '@/assets/icons/CheckCircle';
-import CarFrontIcon from '@/assets/icons/Car';
+import Badges from '@/components/badges';
 import Typography from '@/components/Typography';
+import React from 'react';
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import Mapbox, { MapView } from '@rnmapbox/maps';
+import BedIcon from '@/assets/icons/Bed';
 import { Colors } from '@/constants/Colors';
+import CoffeeIcon from '@/assets/icons/Coffee';
+import ShoppingCartIcon from '@/assets/icons/ShoppingCart';
+import CreditCardIcon from '@/assets/icons/CreditCard';
+import StarIcon from '@/assets/icons/Star';
+import ArrowRightIcon from '@/assets/icons/ArrowRight';
+import ChargeChartGifted from '@/components/Chart';
+import { router } from 'expo-router';
+import PiggyBankIcon from '@/assets/icons/PiggyBank';
 import Toast from 'react-native-toast-message';
+interface AmenitiesProps {
+  icon: React.ReactNode;
+  title: string;
+}
 
-const consumptionData = [
-  { title: '65kW', value: 'Total energy consumed' },
-  { title: '€0.25 kW', value: 'AVG. Energy cost' },
-  { title: '€984', value: 'EST. Total Spend' },
-];
+Mapbox.setAccessToken(
+  'pk.eyJ1IjoidWYwIiwiYSI6ImNtOXZmajJzdDBqOG4yanI4YjVrdHZ3cnMifQ.pI5VwxcUjauW6exy3fMP4Q'
+);
 
-const MainScreen = () => {
+const Amenities = ({ icon, title }: AmenitiesProps) => {
+  return (
+    <View
+      style={{
+        borderWidth: 1,
+        borderColor: Colors.light.gray,
+        borderRadius: 24,
+        flexDirection: 'row',
+        paddingVertical: 6,
+        paddingHorizontal: 8,
+        gap: 6,
+        alignItems: 'center',
+        marginRight: 8,
+      }}
+    >
+      {icon}
+      <Typography weight="semibold" color="gray" style={{ fontSize: 14 }}>
+        {title}
+      </Typography>
+    </View>
+  );
+};
+
+const Charge = () => {
+  const badges = ['Best Price', 'Nearby', '22kW'];
+
   const showToast = () => {
     Toast.show({
       text2: 'Charging completed.',
-      text1: 'You can hire UFUK now :)',
+      text1: 'To Be implemented in future :)',
       type: 'success',
     });
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={showToast}>
-            <ArrowLeftIcon />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={showToast}>
-            <VectorIcon />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.titleContainer}>
-          <Typography
-            weight="medium"
-            style={{ fontSize: 14, textAlign: 'center' }}
-          >
-            <CarFrontIcon /> FERRANS`S CAR
-          </Typography>
-
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ gap: 20 }}
+      >
+        <View>
           <Typography
             weight="bold"
-            style={{ fontSize: 24, textAlign: 'center', alignItems: 'center' }}
+            color="blue"
+            style={{ fontSize: 12, marginTop: 6 }}
           >
-            Charging in progress
+            2/6 PORT FREE
           </Typography>
-
-          <Typography
-            weight="regular"
-            color="green"
-            style={{ fontSize: 12, marginTop: 8 }}
-          >
-            <SunIcon /> Full power charging; excess energy available
+          <Typography weight="bold" style={{ fontSize: 24 }}>
+            de Mobil Charging Station
+          </Typography>
+          <Typography weight="regular" color="gray" style={{ fontSize: 14 }}>
+            13 Lindengasse
           </Typography>
         </View>
 
-        <View style={{ marginTop: 24 }}>
-          <ChargeChart />
+        <View style={styles.badgesContainer}>
+          {badges.map((badge) => (
+            <Badges key={badge}>{badge}</Badges>
+          ))}
         </View>
 
-        <View style={styles.batteryTimeContainer}>
-          <Image
-            source={require('@/assets/images/Baterai.png')}
-            style={styles.batteryImage}
-          />
-          <View style={{ marginLeft: 16 }}>
-            <Typography weight="bold" style={{ fontSize: 14 }}>
-              79%
-            </Typography>
-            <View style={styles.batteryTime}>
-              <Typography weight="bold" style={{ fontSize: 14 }}>
-                24 min{' '}
-              </Typography>
+        <View style={styles.chartContainer}>
+          <ChargeChartGifted showDetails={false} />
+        </View>
 
-              <Typography
-                weight="regular"
-                style={{ fontSize: 13, lineHeight: 19.5 }}
-              >
-                left
-              </Typography>
-            </View>
+        <View>
+          <Typography weight="semibold" color="gray" style={{ fontSize: 14 }}>
+            Amenities on site
+          </Typography>
+
+          <View style={styles.amenitiesContainer}>
+            <Amenities icon={<BedIcon />} title="Restroom" />
+            <Amenities icon={<CoffeeIcon />} title="Coffee" />
           </View>
         </View>
 
-        <View style={styles.timelineContainer}>
-          <Timeline />
+        <View>
+          <Typography weight="semibold" color="gray" style={{ fontSize: 14 }}>
+            {`> ${5} mins to walk`}
+          </Typography>
+
+          <View style={styles.amenitiesContainer}>
+            <Amenities icon={<CreditCardIcon />} title="ATM" />
+            <Amenities icon={<ShoppingCartIcon />} title="Grocery" />
+          </View>
         </View>
 
-        <View style={styles.consumptionContainer}>
-          {consumptionData.map((item) => (
-            <ConsumptionCard
-              key={item.title}
-              title={item.title}
-              value={item.value}
-            />
-          ))}
+        <View style={styles.mapContainer}>
+          <MapView style={{ flex: 1, borderRadius: 10 }} />
         </View>
-        <View style={styles.horizontalLine} />
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.doneButton} onPress={showToast}>
-            <CheckCircleIcon />
-            <Typography
-              weight="bold"
-              color="white"
-              style={styles.doneButtonText}
+
+        <View>
+          <Typography weight="bold" color="black" style={{ fontSize: 20 }}>
+            Charging Tips
+          </Typography>
+          <View
+            style={{
+              marginTop: 12,
+              borderWidth: 1,
+              borderColor: Colors.light.lightGray,
+              borderRadius: 6,
+              padding: 12,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 4,
+                marginBottom: 12,
+              }}
             >
-              DONE
+              <PiggyBankIcon />
+              <Typography
+                weight="semibold"
+                color="blue"
+                style={{ fontSize: 16 }}
+              >
+                18% Savings
+              </Typography>
+            </View>
+            <Typography weight="regular" color="black" style={{ fontSize: 14 }}>
+              By charging here you’ll save €13.54 if you get 20kW. This is
+              possible since there a is an excess of the solar energy generated
+              by your Energy Community.
             </Typography>
+          </View>
+        </View>
+
+        <View>{/* TODO: ADD Reviews HERE  */}</View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={{
+              padding: 14,
+              borderWidth: 1,
+              borderRadius: 10,
+              borderColor: Colors.light.lightGray,
+            }}
+            onPress={showToast}
+          >
+            <StarIcon />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.doneButton}
+            onPress={() => router.push('/charge')}
+          >
+            <Typography
+              weight="semibold"
+              color="white"
+              style={{ fontSize: 14 }}
+            >
+              Directions
+            </Typography>
+            <ArrowRightIcon />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -143,65 +203,43 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     overflow: 'visible',
   },
-  header: {
+  badgesContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
+    gap: 8,
   },
-  titleContainer: {
-    marginTop: 16,
-    width: '100%',
-    alignItems: 'center',
-  },
-  footer: {
-    width: '100%',
-  },
-  batteryImage: {
-    width: 80,
-    height: 40,
-    objectFit: 'contain',
-  },
-  batteryTimeContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  amenitiesContainer: {
     flexDirection: 'row',
-    marginTop: 16,
+    marginRight: 6,
+    marginTop: 8,
   },
-  batteryTime: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  consumptionContainer: {
-    marginTop: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-  },
-  horizontalLine: {
+  chartContainer: {
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    width: '100%',
-    marginVertical: 24,
-  },
-  timelineContainer: {
-    marginTop: 16,
+    borderColor: Colors.light.lightGray,
+    borderRadius: 6,
+    paddingVertical: 12,
   },
   doneButton: {
-    width: '100%',
+    flex: 1,
     backgroundColor: Colors.light.blue,
     padding: 16,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 12,
   },
-  doneButtonText: {
-    marginLeft: 8,
-    fontSize: 14,
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  mapContainer: {
+    height: 190,
+    width: '100%',
+    borderRadius: 10,
+    overflow: 'hidden',
   },
 });
 
-export default MainScreen;
+export default Charge;

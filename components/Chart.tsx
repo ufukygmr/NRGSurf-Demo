@@ -39,7 +39,11 @@ const xLabels = ['0', '0.5', '1.0', '1.5', '2.0', '2.5'];
 // Right-side Y-axis labels (simulated)
 const rightYAxisLabels = ['0', '20', '40', '60', '80', '100'];
 
-const ChargeChartGifted = () => {
+const ChargeChartGifted = ({
+  showDetails = true,
+}: {
+  showDetails: boolean;
+}) => {
   const [mounted, setMounted] = React.useState(false);
 
   useEffect(() => {
@@ -49,16 +53,18 @@ const ChargeChartGifted = () => {
 
   return (
     <View style={{ width: '100%' }}>
-      <View style={styles.textTransform90}>
-        <Typography
-          weight="semibold"
-          style={{
-            fontSize: 8,
-          }}
-        >
-          CONSTANT kW
-        </Typography>
-      </View>
+      {showDetails && (
+        <View style={styles.textTransform90}>
+          <Typography
+            weight="semibold"
+            style={{
+              fontSize: 8,
+            }}
+          >
+            CONSTANT kW
+          </Typography>
+        </View>
+      )}
 
       <View style={{ flexDirection: 'row' }}>
         <LineChart
@@ -93,27 +99,31 @@ const ChargeChartGifted = () => {
       </View>
 
       {/* Right Y-axis title (rotated) */}
-      <View style={styles.textTransform270}>
+      {showDetails && (
+        <View style={styles.textTransform270}>
+          <Typography
+            weight="semibold"
+            style={{
+              fontSize: 8,
+            }}
+          >
+            CHARGE CAPACITY (%)
+          </Typography>
+        </View>
+      )}
+
+      {showDetails && (
         <Typography
           weight="semibold"
           style={{
+            marginTop: 8,
+            textAlign: 'center',
             fontSize: 8,
           }}
         >
-          CHARGE CAPACITY (%)
+          CHARGE TIME (HOURS)
         </Typography>
-      </View>
-
-      <Typography
-        weight="semibold"
-        style={{
-          marginTop: 8,
-          textAlign: 'center',
-          fontSize: 8,
-        }}
-      >
-        CHARGE TIME (HOURS)
-      </Typography>
+      )}
     </View>
   );
 };

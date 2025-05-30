@@ -2,7 +2,7 @@
   "expo": {
     "name": "NRGsurf",
     "slug": "NRGsurf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo_nrg.png",
     "scheme": "myapp",
@@ -33,6 +33,12 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Show current location on map."
         }
       ],
       "expo-font"
